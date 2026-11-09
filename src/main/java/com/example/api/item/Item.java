@@ -1,14 +1,21 @@
 package com.example.api.item;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-public class Item {
+@Getter
+@Setter
+public class Item{
 
-    enum ProgressStatus {
+    public enum ProgressStatus{
         UNSET((byte) 0, "#D3D3D3"),
         BACKLOG((byte) 1, "#808080"),
         SELECTED((byte) 2, "#0000FF"),
@@ -16,22 +23,21 @@ public class Item {
         COMPLETED((byte) 4, "#008000"),
         ARCHIVED((byte) 99, "#A9A9A9");
 
-        private final byte order; //Order is bnot used in a custom compare-to but is make to match the client and to make additions easier
+        private final byte order;
         private final String hexColor;
 
-        ProgressStatus(byte order, String hexColor) {
+        ProgressStatus(byte order, String hexColor){
             this.order = order;
             this.hexColor = hexColor;
         }
 
-        public int getOrder() {
+        public int getOrder(){
             return order;
         }
 
-        public String getHexColor() {
+        public String getHexColor(){
             return hexColor;
         }
-
     }
 
     // Tracking of connected systems
@@ -44,11 +50,16 @@ public class Item {
 
     String title;
     short priority = -1;
+
+    @Enumerated(EnumType.STRING)
     ProgressStatus progressStatus = ProgressStatus.UNSET;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    public int getProgressStatusOrder() {
+        return progressStatus.getOrder();
+    }
 
-    Item(){
-
+    Item() {
     }
 
     Item(String title, short priority, ProgressStatus progressStatus){
@@ -56,7 +67,4 @@ public class Item {
         this.priority = priority;
         this.progressStatus = progressStatus;
     }
-
-
-
 }
