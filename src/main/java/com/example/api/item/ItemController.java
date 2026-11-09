@@ -1,4 +1,4 @@
-package com.example.api;
+package com.example.api.item;
 
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,23 +11,23 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/notes")
-public class NoteController {
+@RequestMapping("/items")
+public class ItemController {
 
-    private final NoteRepository repo;
+    private final ItemRepository repo;
 
-    public NoteController(NoteRepository repo) {
+    public ItemController(ItemRepository repo) {
         this.repo = repo;
     }
 
     @GetMapping
-    public List<Note> list() {
+    public List<Item> list() {
         return repo.findAll();
     }
 
     @PostMapping
-    public Note create(@RequestBody Note note) {
-        log.debug("POST Note Create was triggered");
-        return repo.save(note);
+    public Item create(@RequestBody Item item) {
+        log.debug("POST Item Create was triggered");
+        return repo.save(item);
     }
 }
